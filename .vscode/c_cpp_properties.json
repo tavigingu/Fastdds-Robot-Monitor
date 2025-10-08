@@ -1,0 +1,37 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "{",
+                "    \"configurations\": [",
+                "        {",
+                "            \"name\": \"Linux\",",
+                "            \"includePath\": [",
+                "                \"${workspaceFolder}/**\",              // include tot workspace-ul recursiv",
+                "                \"${workspaceFolder}/include\",         // headerele tale",
+                "                \"${workspaceFolder}/generated\",       // fișiere generate din IDL",
+                "                \"/usr/local/include\",                 // system includes",
+                "                \"/usr/local/include/fastdds\",         // Fast DDS headers",
+                "                \"/usr/local/include/fastcdr\"          // Fast CDR headers (Fast DDS dependență)",
+                "            ],",
+                "            \"defines\": [],",
+                "            \"compilerPath\": \"/usr/bin/g++\",",
+                "            \"cStandard\": \"c11\",",
+                "            \"cppStandard\": \"c++17\",",
+                "            \"intelliSenseMode\": \"linux-gcc-x64\"",
+                "        }",
+                "    ],",
+                "    \"version\": 4",
+                "}"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

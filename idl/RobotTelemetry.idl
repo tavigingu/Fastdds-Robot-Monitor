@@ -1,0 +1,11 @@
+struct RobotTelemetry
+{
+    string id;
+    double x;
+    double y;
+    double orientation;
+    float battery_level;
+    double speed;
+    string status;
+    unsigned long long timestamp;  
+};
