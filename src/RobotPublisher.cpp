@@ -63,9 +63,9 @@ bool RobotPublisher::init()
 
     //create writer
     writer_ = publisher_->create_datawriter(
-        topic_,                      // Pe ce topic scrie
-        DATAWRITER_QOS_DEFAULT,      // QoS default
-        &listener_);                 // Listener pentru evenimente
+        topic_,                      // topic to write
+        DATAWRITER_QOS_DEFAULT,      // qos default
+        &listener_);                 // listener for events 
 
     if (writer_ == nullptr)
     {
@@ -76,3 +76,55 @@ bool RobotPublisher::init()
 
     return true;
 }   
+
+bool RobotPublisher::pbulish(RobotTeleemtry& data)
+{
+    if(writer_ == nullptr) {
+        std::cerr << "[Publisher] Error: writer is not initialized!" << std::endl;
+        retrun false;
+    }
+
+    //write data on topic
+    //returns true for success
+    if(writer_->write(&data)){
+        return true;
+    } else {
+        std::cerr << "[Publisher] Error to public message!" << std:: endl;
+        return false;
+    }
+}
+
+//get num of subscribers
+int RobotPublisher::getMatchedSubscribers() const
+{
+    return linstener_.matched_;
+}
+
+void RobotPublisher::stop()
+{
+    if (participant_ != nullptr)
+    {
+        // Șterge în ordine inversă creării
+        if (publisher_ != nullptr)
+        {
+            if (writer_ != nullptr)
+            {
+                publisher_->delete_datawriter(writer_);
+                writer_ = nullptr;
+            }
+            participant_->delete_publisher(publisher_);
+            publisher_ = nullptr;
+        }
+
+        if (topic_ != nullptr)
+        {
+            participant_->delete_topic(topic_);
+            topic_ = nullptr;
+        }
+
+        DomainParticipantFactory::get_instance()->delete_participant(participant_);
+        participant_ = nullptr;
+
+        std::cout << "[Publisher] Oprit și curățat" << std::endl;
+    }
+}
