@@ -25,8 +25,6 @@
 #include <fastdds/rtps/common/CdrSerialization.hpp>
 
 #include "RobotTelemetryCdrAux.hpp"
-#include "RobotTelemetryTypeObjectSupport.hpp"
-
 using SerializedPayload_t = eprosima::fastdds::rtps::SerializedPayload_t;
 using InstanceHandle_t = eprosima::fastdds::rtps::InstanceHandle_t;
 using DataRepresentationId_t = eprosima::fastdds::dds::DataRepresentationId_t;
@@ -210,7 +208,8 @@ bool RobotTelemetryPubSubType::compute_key(
 
 void RobotTelemetryPubSubType::register_type_object_representation()
 {
-    register_RobotTelemetry_type_identifier(type_identifiers_);
+    EPROSIMA_LOG_WARNING(XTYPES_TYPE_REPRESENTATION,
+        "TypeObject type representation support disabled in generated code");
 }
 
 

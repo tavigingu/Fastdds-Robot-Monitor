@@ -41,4 +41,5 @@ private:
     DataWriter* writer_;
     TypeSupport type_;
     PubListener listener_;
- }
+ };
+#endif

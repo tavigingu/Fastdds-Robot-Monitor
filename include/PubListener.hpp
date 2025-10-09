@@ -23,7 +23,7 @@ public:
     {
         if(info.current_count_change == 1)
         {
-            matched = info.current_count;
+            matched_ = info.current_count;
             std::cout<<"[Publisher] Subscriber connected! Total: " << matched_ <<std::endl;
         }
         else if (info.current_count_change == -1)
@@ -36,3 +36,4 @@ public:
     /// num of currently matched subscribers
     int matched_;
 };
+#endif

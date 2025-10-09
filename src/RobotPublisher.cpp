@@ -11,7 +11,7 @@ RobotPublisher::RobotPublisher()
 {
 }
 
-RobotPublisher:~RobotPublisher()
+RobotPublisher::~RobotPublisher()
 {
     stop();
 }
@@ -27,7 +27,7 @@ bool RobotPublisher::init()
     participant_ = DomainParticipantFactory::get_instance()->create_participant(
         0, // domain id
         pqos // qos settings
-    )
+    );
 
     if(participant_ == nullptr){
         std::cerr<< "[Publisher] Error: Failed to create DomainParticipant!"<< std::endl;
@@ -53,7 +53,7 @@ bool RobotPublisher::init()
     std::cout << "[Publisher] Topic created: robot_telemetry" << std::endl;
 
     //create publisher
-    publisher_ = participant_->createPublisher(PUBLISHER_QOS_DEFAULT);
+    publisher_ = participant_->create_publisher(PUBLISHER_QOS_DEFAULT);
     if (publisher_ == nullptr)
     {
         std::cerr << "[Publisher] Error: Failed to create Publisher!" << std::endl;
@@ -77,11 +77,11 @@ bool RobotPublisher::init()
     return true;
 }   
 
-bool RobotPublisher::pbulish(RobotTeleemtry& data)
+bool RobotPublisher::publish(RobotTelemetry& data)
 {
     if(writer_ == nullptr) {
         std::cerr << "[Publisher] Error: writer is not initialized!" << std::endl;
-        retrun false;
+        return false;
     }
 
     //write data on topic
@@ -97,7 +97,7 @@ bool RobotPublisher::pbulish(RobotTeleemtry& data)
 //get num of subscribers
 int RobotPublisher::getMatchedSubscribers() const
 {
-    return linstener_.matched_;
+    return listener_.matched_;
 }
 
 void RobotPublisher::stop()
