@@ -79,17 +79,30 @@ bool RobotPublisher::init()
 
 bool RobotPublisher::publish(RobotTelemetry& data)
 {
-    if(writer_ == nullptr) {
-        std::cerr << "[Publisher] Error: writer is not initialized!" << std::endl;
+    if (writer_ == nullptr)
+    {
+        std::cerr << "[Publisher] Error: writer is not initializated!" << std::endl;
         return false;
     }
 
-    //write data on topic
-    //returns true for success
-    if(writer_->write(&data)){
+    ReturnCode_t ret = writer_->write(&data);
+    
+    if (ret == RETCODE_OK)
+    {
         return true;
-    } else {
-        std::cerr << "[Publisher] Error to public message!" << std:: endl;
+    }
+    else
+    {
+        std::cerr << "[Publisher] Error to public message! ReturnCode: " << ret << std::endl;
+        
+        // Debugging info
+        if (ret == RETCODE_ERROR)
+            std::cerr << "  -> RETCODE_ERROR: generic error" << std::endl;
+        else if (ret == RETCODE_BAD_PARAMETER)
+            std::cerr << "  -> RETCODE_BAD_PARAMETER: invalid parameter" << std::endl;
+        else if (ret == RETCODE_TIMEOUT)
+            std::cerr << "  -> RETCODE_TIMEOUT: Timeout" << std::endl;
+        
         return false;
     }
 }

@@ -1,0 +1,2 @@
+/usr/bin/ar qc librobot_telemetry_types.a CMakeFiles/robot_telemetry_types.dir/generated/RobotTelemetryPubSubTypes.cxx.o
+/usr/bin/ranlib librobot_telemetry_types.a

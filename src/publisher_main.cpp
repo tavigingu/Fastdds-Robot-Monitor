@@ -104,9 +104,11 @@ int main()
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
+    double total_sim_time = simulator.getSimulationTime();
+
     std::cout << "\n[Main] Total messages published: " << message_count << std::endl;
     std::cout << "[Main] Total simulated time: " << std::fixed << std::setprecision(1)
-          << simulator.getSimulationTime() << " seconds" << std::endl;
+          << total_sim_time << " seconds" << std::endl;
 
 
     publisher.stop();

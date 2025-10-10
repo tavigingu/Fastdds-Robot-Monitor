@@ -1,0 +1,2 @@
+/usr/bin/ar qc librobot_simulator.a CMakeFiles/robot_simulator.dir/src/RobotSimulator.cpp.o
+/usr/bin/ranlib librobot_simulator.a
