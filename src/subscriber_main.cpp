@@ -2,7 +2,7 @@
 #include <iostream>
 #include <signal.h>
 
-volatile sig_atommic_t g_running = 1;
+volatile sig_atomic_t g_running = 1;
 
 void signalHandler(int signum)
 {
@@ -30,7 +30,7 @@ int main()
     std::cout << "[Main subscriber] messages will apear here" << std::endl;
     
     subscriber.run();
-    std::cout << "[Main subscriber] Statistics: " std::endl;
+    std::cout << "[Main subscriber] Statistics: " << std::endl;
     std::cout << "Total messages received: " << subscriber.getTotalMessages() <<std::endl;
     std::cout << "Publishers connected: " << subscriber.getMatchedPublishers() << std::endl;
 

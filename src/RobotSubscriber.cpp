@@ -17,7 +17,7 @@ RobotSubscriber::~RobotSubscriber()
     stop();
 }
 
-void RobotSubscriber::init()
+bool RobotSubscriber::init()
 {
     std::cout << "[Subscriber] Initializing...\n" << std::endl;
     DomainParticipantQos pqos;
@@ -38,7 +38,7 @@ void RobotSubscriber::init()
     //create topic - same name as publisher
     topic_ = participant_->create_topic(
         "robot_telemetry",
-        type.get_type_name(),
+        type_.get_type_name(),
         TOPIC_QOS_DEFAULT
     );
 
@@ -59,7 +59,7 @@ void RobotSubscriber::init()
     std::cout << "[Subscriber] Subscriber created" << std::endl;
 
     //create data reader
-    reader_ = subscriber_->craete_datareader(
+    reader_ = subscriber_->create_datareader(
         topic_,
         DATAREADER_QOS_DEFAULT,
         &listener_);
@@ -75,8 +75,8 @@ void RobotSubscriber::init()
 
 void RobotSubscriber::run()
 {
-    std::cout << "[Subscriber] Reading messages" std::endl;
-    std::cout << "[Subscriber] Press enter to stop" std::endl;
+    std::cout << "[Subscriber] Reading messages" << std::endl;
+    std::cout << "[Subscriber] Press enter to stop" << std::endl;
 
     std::cin.ignore();
 }
@@ -91,7 +91,7 @@ uint32_t RobotSubscriber::getTotalMessages() const
     return listener_.samples_received_;
 }
 
-void RobotSUbscriber::stop()
+void RobotSubscriber::stop()
 {
     if (participant_ != nullptr)
     {
@@ -117,7 +117,7 @@ void RobotSUbscriber::stop()
     DomainParticipantFactory::get_instance()->delete_participant(participant_);
     participant_ = nullptr;
 
-    std::cout<<"[Subscriber] Stopped" std::endl;
+    std::cout<<"[Subscriber] Stopped" << std::endl;
 }
 
 

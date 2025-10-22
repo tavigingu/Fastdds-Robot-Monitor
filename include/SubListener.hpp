@@ -1,12 +1,19 @@
+#ifndef SUB_LISTENER_HPP
 #include <fastdds/dds/domain/DomainParticipant.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/subscriber/DataReader.hpp>
 #include <fastdds/dds/subscriber/DataReaderListener.hpp>
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
+#include <fastdds/dds/subscriber/qos/DataReaderQos.hpp>
 #include <fastdds/dds/topic/Topic.hpp>
+#include <iostream>
+#include <iomanip>
+#include <string>
 
 #include "RobotTelemetry.hpp"
 #include "RobotTelemetryPubSubTypes.hpp"
+
+using namespace eprosima::fastdds::dds;  
 
 class SubListener : public DataReaderListener
 {
@@ -18,10 +25,10 @@ public:
     
     ~SubListener() override {}
 
-    on_subscription_matched(
-    DataReader* reader,
-    const SubscriptionMatchedStatus& info) override
-    {
+    void on_subscription_matched(  
+        DataReader* reader,  
+        const SubscriptionMatchedStatus& info) override  
+    { 
         if (info.current_count_change == 1)
         {
             matched_ = info.current_count;
@@ -30,11 +37,11 @@ public:
         else if (info.current_count_change == -1)
         {
             matched_ = info.current_count;
-            std::cout << "[Subscriber Listener] Publisher connected! Total: " << matched_ << std::endl;
+            std::cout << "[Subscriber Listener] Publisher disconnected! Total: " << matched_ << std::endl;  // Corectat mesaj
         }
     }
 
-    on_data_available(DataReader* reader)
+    void on_data_available(DataReader* reader)
     {
         RobotTelemetry telemetry;
         SampleInfo info;
@@ -65,13 +72,14 @@ public:
         }
         else
         {
-            std::cerr << "[Subscriber] Eroare la citirea datelor! ReturnCode: " << ret() << std::endl;
+            std::cerr << "[Subscriber] Eroare la citirea datelor! ReturnCode: " << ret << std::endl;
         }
     }
 
    
-
     int matched_;                // num of publishers connected
     uint32_t samples_received_;  // num of messages received
 
-} 
+};
+
+#endif

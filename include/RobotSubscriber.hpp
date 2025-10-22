@@ -12,7 +12,7 @@
 #include "RobotTelemetry.hpp"
 #include "RobotTelemetryPubSubTypes.hpp"
 
-using namespace eprosima::fastdds::dds;#define ROBOT_SUBSCRIBER_HPP
+using namespace eprosima::fastdds::dds;
 
 class RobotSubscriber
 {
@@ -22,15 +22,17 @@ public:
 
     bool init();
     void run();
-    int getMatchedPublishers();
+    int getMatchedPublishers() const;
     void stop();
-    uint32_t getTotalMessages();
+    uint32_t getTotalMessages() const;
 
 private:
     DomainParticipant* participant_;
-    Subsciber* subscriber_;
-    Topic* topic
+    Subscriber* subscriber_;
+    Topic* topic_;
     DataReader* reader_;
     TypeSupport type_;
     SubListener listener_;
-}
+};
+
+#endif
