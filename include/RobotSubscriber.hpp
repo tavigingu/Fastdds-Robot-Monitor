@@ -6,6 +6,7 @@
 #include <fastdds/dds/subscriber/DataReader.hpp>
 #include <fastdds/dds/subscriber/DataReaderListener.hpp>
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
+#include <fastdds/dds/subscriber/qos/DataReaderQos.hpp>
 #include <fastdds/dds/topic/Topic.hpp>
 
 #include "SubListener.hpp"
@@ -20,7 +21,8 @@ public:
     RobotSubscriber();
     ~RobotSubscriber();
 
-    bool init();
+    bool init(DataReaderQos& qos);
+    void printReaderQoS(const DataReaderQos& qos);
     void run();
     int getMatchedPublishers() const;
     void stop();

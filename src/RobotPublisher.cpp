@@ -16,7 +16,8 @@ RobotPublisher::~RobotPublisher()
     stop();
 }
 
-bool RobotPublisher::init()
+//bool RobotPublisher::init()
+bool RobotPublisher::init(const DataWriterQos& qos)
 {
     std::cout << "[Publisher] Initializing ..." << std::endl;
     
@@ -64,7 +65,7 @@ bool RobotPublisher::init()
     //create writer
     writer_ = publisher_->create_datawriter(
         topic_,                      // topic to write
-        DATAWRITER_QOS_DEFAULT,      // qos default
+        qos,      // qos custom
         &listener_);                 // listener for events 
 
     if (writer_ == nullptr)
@@ -72,6 +73,8 @@ bool RobotPublisher::init()
         std::cerr << "[Publisher] Error: Failed to create DataWriter!" << std::endl;
         return false;
     }
+
+    printWriterQoS(qos);
     std::cout << "[Publisher] DataWriter created" << std::endl;
 
     return true;
@@ -139,5 +142,35 @@ void RobotPublisher::stop()
         participant_ = nullptr;
 
         std::cout << "[Publisher] Oprit și curățat" << std::endl;
+    }
+}
+
+void RobotPublisher::printWriterQoS(const DataWriterQos& qos)
+{
+    std::cout << "[Publisher] DataWriter creat cu următorul QoS:" << std::endl;
+    
+    std::cout << "  - Reliability: " 
+              << (qos.reliability().kind == RELIABLE_RELIABILITY_QOS ? "RELIABLE" : "BEST_EFFORT") 
+              << std::endl;
+    
+    std::cout << "  - Durability:  " 
+              << (qos.durability().kind == TRANSIENT_LOCAL_DURABILITY_QOS ? "TRANSIENT_LOCAL" : "VOLATILE") 
+              << std::endl;
+    
+    std::cout << "  - History:     " 
+              << (qos.history().kind == KEEP_LAST_HISTORY_QOS ? "KEEP_LAST" : "KEEP_ALL");
+    if (qos.history().kind == KEEP_LAST_HISTORY_QOS)
+        std::cout << "(" << qos.history().depth << ")";
+    std::cout << std::endl;
+    
+    if (qos.deadline().period.seconds > 0 || qos.deadline().period.nanosec > 0)
+    {
+        std::cout << "  - Deadline:    " << qos.deadline().period.seconds << "s " 
+                  << qos.deadline().period.nanosec / 1000000 << "ms" << std::endl;
+    }
+    
+    if (qos.lifespan().duration.seconds > 0 || qos.lifespan().duration.nanosec > 0)
+    {
+        std::cout << "  - Lifespan:    " << qos.lifespan().duration.seconds << "s" << std::endl;
     }
 }

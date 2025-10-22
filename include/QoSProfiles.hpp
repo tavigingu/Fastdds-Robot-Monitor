@@ -5,18 +5,20 @@
 #include <fastdds/dds/subscriber/qos/DataReaderQos.hpp>
 #include <fastdds/dds/core/policy/QosPolicies.hpp>
 
+
+
 class QoSProfiles 
 {
 public:
     static DataWriterQos getReliableTransientWriterQoS()
     {
-        DataWriterQOs qos;
+        DataWriterQos qos;
 
         //reliability: guarantees delivery 
         qos.reliability().kind = RELIABLE_RELIABILITY_QOS;
 
         //durability: keeps history for new subscribers
-        qos.durability().kind = TRANSIENT_LOCAL_DURABILITY
+        qos.durability().kind = TRANSIENT_LOCAL_DURABILITY_QOS;
 
         qos.history().kind = KEEP_LAST_HISTORY_QOS;
         qos.history().depth =  10; 
@@ -33,14 +35,28 @@ public:
         qos.durability().kind = TRANSIENT_LOCAL_DURABILITY_QOS;
         qos.history().kind = KEEP_LAST_HISTORY_QOS;
         qos.history().depth = 10;
+
+        return qos;
     }
 
-    static DataReaderQos getBestEffortReaderQos()
+    static DataReaderQos getBestEffortReaderQoS()
     {
-        DataReader qos;
+        DataReaderQos qos;
 
-        qos.realiability().kind = BEST_EFFORT_RELIABILITY_QOS;
-        qos.realiability().kind = VOLATILE_DURABILITY_QOS;
+        qos.reliability().kind = BEST_EFFORT_RELIABILITY_QOS;
+        qos.durability().kind = VOLATILE_DURABILITY_QOS;
+        qos.history().kind = KEEP_LAST_HISTORY_QOS;
+        qos.history().depth = 1;
+
+        return qos;
+    }
+
+    static DataWriterQos getBestEffortWriterQoS()
+    {
+        DataWriterQos qos;
+
+        qos.reliability().kind = BEST_EFFORT_RELIABILITY_QOS;
+        qos.durability().kind = VOLATILE_DURABILITY_QOS;
         qos.history().kind = KEEP_LAST_HISTORY_QOS;
         qos.history().depth = 1;
 
@@ -187,6 +203,6 @@ public:
         std::cout << "================================\n" << std::endl;
     }
 
-}
+};
 
 #endif // QOS_PROFILES_HPP

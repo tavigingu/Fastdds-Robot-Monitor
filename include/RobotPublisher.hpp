@@ -5,6 +5,7 @@
 #include <fastdds/dds/publisher/Publisher.hpp>
 #include <fastdds/dds/publisher/DataWriter.hpp>
 #include <fastdds/dds/publisher/DataWriterListener.hpp>
+#include <fastdds/dds/publisher/qos/DataWriterQos.hpp>
 #include <fastdds/dds/topic/Topic.hpp>
 
 #include "RobotTelemetry.hpp"
@@ -26,10 +27,12 @@ public:
     RobotPublisher();
     ~RobotPublisher();
 
-    bool init();
+    //bool init();
+    bool init(const DataWriterQos& qos = DATAWRITER_QOS_DEFAULT);
 
     bool publish(RobotTelemetry& data);
     int getMatchedSubscribers() const;
+    void printWriterQoS(const DataWriterQos& qos);
 
     void stop();
 
@@ -41,5 +44,7 @@ private:
     DataWriter* writer_;
     TypeSupport type_;
     PubListener listener_;
+
+   
  };
 #endif

@@ -17,7 +17,7 @@ RobotSubscriber::~RobotSubscriber()
     stop();
 }
 
-bool RobotSubscriber::init()
+bool RobotSubscriber::init(DataReaderQos& qos)
 {
     std::cout << "[Subscriber] Initializing...\n" << std::endl;
     DomainParticipantQos pqos;
@@ -61,13 +61,15 @@ bool RobotSubscriber::init()
     //create data reader
     reader_ = subscriber_->create_datareader(
         topic_,
-        DATAREADER_QOS_DEFAULT,
+        qos,
         &listener_);
 
     if(reader_ == nullptr) {
         std::cerr<<"[Subscriber] Error: Failed to create datareader" << std::endl;
         return false;
     }
+
+    printReaderQoS(reader_->get_qos());
     std::cout << "[Subscriber] Datareader created!" << std::endl;
 
     return true;
@@ -120,6 +122,30 @@ void RobotSubscriber::stop()
     std::cout<<"[Subscriber] Stopped" << std::endl;
 }
 
+void RobotSubscriber::printReaderQoS(const DataReaderQos& qos)
+{
+    std::cout << "[Subscriber] DataReader created with the following QoS:" << std::endl;
+    
+    std::cout << "  - Reliability: " 
+              << (qos.reliability().kind == RELIABLE_RELIABILITY_QOS ? "RELIABLE" : "BEST_EFFORT") 
+              << std::endl;
+    
+    std::cout << "  - Durability:  " 
+              << (qos.durability().kind == TRANSIENT_LOCAL_DURABILITY_QOS ? "TRANSIENT_LOCAL" : "VOLATILE") 
+              << std::endl;
+    
+    std::cout << "  - History:     " 
+              << (qos.history().kind == KEEP_LAST_HISTORY_QOS ? "KEEP_LAST" : "KEEP_ALL");
+    if (qos.history().kind == KEEP_LAST_HISTORY_QOS)
+        std::cout << "(" << qos.history().depth << ")";
+    std::cout << std::endl;
+    
+    if (qos.deadline().period.seconds > 0 || qos.deadline().period.nanosec > 0)
+    {
+        std::cout << "  - Deadline:    " << qos.deadline().period.seconds << "s " 
+                  << qos.deadline().period.nanosec / 1000000 << "ms" << std::endl;
+    }
+}
 
 
 

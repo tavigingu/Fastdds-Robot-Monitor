@@ -1,5 +1,6 @@
 #include "RobotPublisher.hpp"
 #include "RobotSimulator.hpp"
+#include "QoSProfiles.hpp"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -54,7 +55,41 @@ int main()
 
     RobotPublisher publisher;
 
-    if(!publisher.init())
+    std::cout << "[Publisher main] Select a QoS profile:" << std::endl;
+    std::cout << "  1. RELIABLE + TRANSIENT_LOCAL (Recommended for telemetry)" << std::endl;
+    std::cout << "  2. BEST_EFFORT (Fast, no guarantees)" << std::endl;
+    std::cout << "  3. RELIABLE + DEADLINE (Timeout detection)" << std::endl;
+    std::cout << "  4. DEFAULT (No custom QoS)" << std::endl;
+    std::cout << "Option [1-4]: ";
+
+    int choice;
+    std::cin >> choice;
+    std::cin.ignore();
+
+    DataWriterQos qos;
+    switch(choice)
+    {
+        case 1:
+            qos = QoSProfiles::getReliableTransientWriterQoS();
+            std::cout << "\n[Publisher main] Using: RELIABLE + TRANSIENT_LOCAL + KEEP_LAST(10)" << std::endl;
+            break;
+        case 2:
+            qos = QoSProfiles::getBestEffortWriterQoS();
+            std::cout << "\n[Publisher main] Using: BEST_EFFORT + VOLATILE" << std::endl;
+            break;
+        case 3:
+            qos = QoSProfiles::getReliableWithDeadlineWriterQoS();
+            std::cout << "\n[Publisher main] Using: RELIABLE + DEADLINE(500ms)" << std::endl;
+            break;
+        case 4:
+        default:
+            qos = DATAWRITER_QOS_DEFAULT;
+            std::cout << "\n[Publisher main] Using: DEFAULT QoS" << std::endl;
+            break;
+    }
+
+
+    if(!publisher.init(qos))
     {
         std::cerr << "[Publisher main] Init error" << std::endl;
         return -1;
