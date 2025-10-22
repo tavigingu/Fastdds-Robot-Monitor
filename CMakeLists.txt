@@ -1,17 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 project(RobotDDS VERSION 1.0.0 LANGUAGES CXX)
 
-# Standard C++11 minim (FastDDS suportă C++11, dar C++14/17 e recomandat)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Mesaje informative
 message(STATUS "Building Robot DDS Project")
 message(STATUS " - Publisher application")
 message(STATUS " - Subscriber application")
 
-# Adaugă path-uri de căutare pentru FastDDS instalat local
-# Ajustează path-urile dacă ai instalat în alt loc
 list(APPEND CMAKE_PREFIX_PATH
 "$ENV{HOME}/Fast-DDS/install"
 "$ENV{HOME}/Fast-CDR/install"
@@ -19,8 +15,6 @@ list(APPEND CMAKE_PREFIX_PATH
 "/usr/local"
 )
 
-# Găsim FastDDS și FastCDR
-# Notă: FastDDS 3.x folosește pachetul "fastdds" (nu "fastrtps")
 find_package(fastdds REQUIRED)
 find_package(fastcdr REQUIRED)
 
@@ -34,16 +28,12 @@ ${PROJECT_SOURCE_DIR}/generated
 )
 
 # ============================================================================
-# Fișiere generate din IDL (cod automat generat)
+# FIles generated from IDL
 # ============================================================================
-# Notă: fastddsgen generează fișiere .cxx (nu .cpp)
 set(GENERATED_SOURCES
 #generated/RobotTelemetry.cxx
 generated/RobotTelemetryPubSubTypes.cxx
 )
-
-# Dacă vrei Type Object Support (DDS XTypes), decomentează linia de jos:
-# list(APPEND GENERATED_SOURCES generated/RobotTelemetryTypeObjectSupport.cxx)
 
 # ============================================================================
 # Library cu codul generat (reutilizabil pentru publisher și subscriber)
@@ -52,8 +42,6 @@ add_library(robot_telemetry_types STATIC
 ${GENERATED_SOURCES}
 )
 
-# Include-urile și linking-ul sunt gestionate automat prin target_link_libraries cu fastdds și fastcdr
-# (eliminăm target_include_directories manual, deoarece imported targets le propagează)
 
 target_link_libraries(robot_telemetry_types
 fastdds
@@ -61,7 +49,7 @@ fastcdr
 )
 
 # ============================================================================
-# Library cu RobotSimulator (reutilizabil)
+# Library with RobotSimulator
 # ============================================================================
 add_library(robot_simulator STATIC
 src/RobotSimulator.cpp
@@ -77,7 +65,7 @@ robot_telemetry_types
 )
 
 # ============================================================================
-# Library cu RobotPublisher
+# Library with RobotPublisher
 # ============================================================================
 add_library(robot_publisher STATIC
 src/RobotPublisher.cpp
@@ -95,7 +83,7 @@ fastcdr
 )
 
 # ============================================================================
-# Library cu RobotSubscriber
+# Library with RobotSubscriber
 # ============================================================================
 add_library(robot_subscriber STATIC
 src/RobotSubscriber.cpp
@@ -113,7 +101,7 @@ fastcdr
 )
 
 # ============================================================================
-# Executabil Publisher
+# Publosher exec
 # ============================================================================
 add_executable(publisher
 src/publisher_main.cpp
@@ -128,7 +116,7 @@ fastcdr
 )
 
 # ============================================================================
-# Executabil Subscriber
+# Subscriber exec
 # ============================================================================
 add_executable(subscriber
 src/subscriber_main.cpp
@@ -142,7 +130,7 @@ fastcdr
 )
 
 # ============================================================================
-# Informații post-build
+#  Post-build infos
 # ============================================================================
 message(STATUS "")
 message(STATUS "Build configuration:")
@@ -162,14 +150,14 @@ message(STATUS " ./publisher")
 message(STATUS "")
 
 # ============================================================================
-# Opțional: Install targets
+# Optional: Install targets
 # ============================================================================
 install(TARGETS publisher subscriber
 RUNTIME DESTINATION bin
 )
 
 # ============================================================================
-# Opțional: Print summary după build
+# Print summary after build
 # ============================================================================
 add_custom_target(build_info ALL
 COMMAND ${CMAKE_COMMAND} -E echo ""
